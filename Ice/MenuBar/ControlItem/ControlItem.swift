@@ -425,7 +425,7 @@ final class ControlItem {
         let menu = NSMenu(title: "Ice")
 
         let settingsItem = NSMenuItem(
-            title: "Ice Settings…",
+            title: "Настройки Ice…",
             action: #selector(AppDelegate.openSettingsWindow),
             keyEquivalent: ","
         )
@@ -435,7 +435,7 @@ final class ControlItem {
         menu.addItem(.separator())
 
         let searchItem = NSMenuItem(
-            title: "Search Menu Bar Items",
+            title: "Поиск объектов строки меню",
             action: #selector(showSearchPanel),
             keyEquivalent: ""
         )
@@ -461,8 +461,16 @@ final class ControlItem {
                 // Section doesn't exist, or is disabled.
                 continue
             }
+            let title = switch (name, section.isHidden) {
+            case (.visible, true): "Показать видимую секцию"
+            case (.visible, false): "Скрыть видимую секцию"
+            case (.hidden, true): "Показать скрытую секцию"
+            case (.hidden, false): "Скрыть скрытую секцию"
+            case (.alwaysHidden, true): "Показать всегда скрытую секцию"
+            case (.alwaysHidden, false): "Скрыть всегда скрытую секцию"
+            }
             let item = NSMenuItem(
-                title: "\(section.isHidden ? "Show" : "Hide") the \(name.displayString) Section",
+                title: title,
                 action: #selector(toggleMenuBarSection),
                 keyEquivalent: ""
             )
@@ -491,20 +499,11 @@ final class ControlItem {
             menu.addItem(item)
         }
 
-        menu.addItem(.separator())
-
-        let checkForUpdatesItem = NSMenuItem(
-            title: "Check for Updates…",
-            action: #selector(checkForUpdates),
-            keyEquivalent: ""
-        )
-        checkForUpdatesItem.target = self
-        menu.addItem(checkForUpdatesItem)
 
         menu.addItem(.separator())
 
         let quitItem = NSMenuItem(
-            title: "Quit Ice",
+            title: "Завершить Ice",
             action: #selector(NSApp.terminate),
             keyEquivalent: "q"
         )
@@ -530,14 +529,6 @@ final class ControlItem {
         Task {
             await appState.menuBarManager.searchPanel.show(on: screen)
         }
-    }
-
-    /// Opens the settings window and checks for app updates.
-    @objc private func checkForUpdates() {
-        guard let appState else {
-            return
-        }
-        appState.updatesManager.checkForUpdates()
     }
 
     /// Adds the control item to the menu bar.

@@ -191,8 +191,8 @@ private struct MenuBarSearchContentView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            TextField(text: $searchText, prompt: Text("Search menu bar items…")) {
-                Text("Search menu bar items…")
+            TextField(text: $searchText, prompt: Text("Поиск объектов строки меню…")) {
+                Text("Поиск объектов строки меню…")
             }
             .labelsHidden()
             .textFieldStyle(.plain)
@@ -260,7 +260,7 @@ private struct MenuBarSearchContentView: View {
             }
 
             let headerItem = ListItem.header(id: .header(section)) {
-                Text(section.displayString)
+                Text("\(section.displayString) секция")
                     .fontWeight(.semibold)
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -374,7 +374,7 @@ private struct ShowItemButton: View {
     var body: some View {
         BottomBarButton(action: action) {
             HStack {
-                Text(item.isOnScreen ? "Click item" : "Show item")
+                Text(item.isOnScreen ? "Нажать объект" : "Показать объект")
                     .padding(.horizontal, 5)
 
                 Image(systemName: "return")

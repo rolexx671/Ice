@@ -9,10 +9,6 @@ struct AboutSettingsPane: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.openURL) private var openURL
 
-    private var updatesManager: UpdatesManager {
-        appState.updatesManager
-    }
-
     private var acknowledgementsURL: URL {
         // swiftlint:disable:next force_unwrapping
         Bundle.main.url(forResource: "Acknowledgements", withExtension: "pdf")!
@@ -32,14 +28,6 @@ struct AboutSettingsPane: View {
         URL(string: "https://icemenubar.app/Donate")!
     }
 
-    private var lastUpdateCheckString: String {
-        if let date = updatesManager.lastUpdateCheckDate {
-            date.formatted(date: .abbreviated, time: .standard)
-        } else {
-            "Never"
-        }
-    }
-
     var body: some View {
         VStack(spacing: 0) {
             mainForm
@@ -53,12 +41,6 @@ struct AboutSettingsPane: View {
     private var mainForm: some View {
         IceForm(padding: EdgeInsets(top: 5, leading: 30, bottom: 30, trailing: 30), spacing: 0) {
             appIconAndCopyrightSection
-                .layoutPriority(1)
-
-            Spacer(minLength: 0)
-                .frame(maxHeight: 20)
-
-            updatesSection
                 .layoutPriority(1)
         }
         .scrollDisabled(true)
@@ -82,7 +64,7 @@ struct AboutSettingsPane: View {
                         .font(.system(size: 72, weight: .medium))
                         .foregroundStyle(.primary)
 
-                    Text("Version \(Constants.versionString)")
+                    Text("Версия \(Constants.versionString)")
                         .font(.system(size: 18))
                         .foregroundStyle(.secondary)
 
@@ -95,62 +77,22 @@ struct AboutSettingsPane: View {
     }
 
     @ViewBuilder
-    private var updatesSection: some View {
-        IceSection(options: .hasDividers) {
-            automaticallyCheckForUpdates
-            automaticallyDownloadUpdates
-            if updatesManager.canCheckForUpdates {
-                checkForUpdates
-            }
-        }
-        .frame(maxWidth: 600)
-    }
-
-    @ViewBuilder
-    private var automaticallyCheckForUpdates: some View {
-        Toggle(
-            "Automatically check for updates",
-            isOn: updatesManager.bindings.automaticallyChecksForUpdates
-        )
-    }
-
-    @ViewBuilder
-    private var automaticallyDownloadUpdates: some View {
-        Toggle(
-            "Automatically download updates",
-            isOn: updatesManager.bindings.automaticallyDownloadsUpdates
-        )
-    }
-
-    @ViewBuilder
-    private var checkForUpdates: some View {
-        HStack {
-            Button("Check for Updates") {
-                updatesManager.checkForUpdates()
-            }
-            Spacer()
-            Text("Last checked: \(lastUpdateCheckString)")
-                .font(.caption)
-        }
-    }
-
-    @ViewBuilder
     private var bottomBar: some View {
         HStack {
-            Button("Quit Ice") {
+            Button("Завершить Ice") {
                 NSApp.terminate(nil)
             }
             Spacer()
-            Button("Acknowledgements") {
+            Button("Благодарности") {
                 NSWorkspace.shared.open(acknowledgementsURL)
             }
-            Button("Contribute") {
+            Button("Участвовать") {
                 openURL(contributeURL)
             }
-            Button("Report a Bug") {
+            Button("Сообщить об ошибке") {
                 openURL(issuesURL)
             }
-            Button("Support Ice", systemImage: "heart.circle.fill") {
+            Button("Поддержать Ice", systemImage: "heart.circle.fill") {
                 openURL(donateURL)
             }
         }

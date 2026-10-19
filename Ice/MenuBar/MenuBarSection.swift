@@ -17,9 +17,9 @@ final class MenuBarSection {
         /// A string to show in the interface.
         var displayString: String {
             switch self {
-            case .visible: "Visible"
-            case .hidden: "Hidden"
-            case .alwaysHidden: "Always-Hidden"
+            case .visible: "Видимая"
+            case .hidden: "Скрытая"
+            case .alwaysHidden: "Всегда скрытая"
             }
         }
 

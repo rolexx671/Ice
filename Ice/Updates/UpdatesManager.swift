@@ -7,6 +7,9 @@ import Sparkle
 import SwiftUI
 
 /// Manager for app updates.
+///
+/// In this fork automatic updates are disabled: the updater is never started,
+/// so the original app's releases can't replace the Russian build.
 @MainActor
 final class UpdatesManager: NSObject, ObservableObject {
     /// A Boolean value that indicates whether the user can check for updates.
@@ -19,8 +22,10 @@ final class UpdatesManager: NSObject, ObservableObject {
     private(set) weak var appState: AppState?
 
     /// The underlying updater controller.
+    ///
+    /// The updater is not started (`startingUpdater: false`), so no update checks happen.
     private(set) lazy var updaterController = SPUStandardUpdaterController(
-        startingUpdater: true,
+        startingUpdater: false,
         updaterDelegate: self,
         userDriverDelegate: self
     )
@@ -59,35 +64,19 @@ final class UpdatesManager: NSObject, ObservableObject {
     }
 
     /// Sets up the manager.
+    ///
+    /// Updates are disabled in this fork: the updater is neither created nor
+    /// started, and `canCheckForUpdates` stays `false`.
     func performSetup() {
-        _ = updaterController
-        configureCancellables()
-    }
-
-    /// Configures the internal observers for the manager.
-    private func configureCancellables() {
-        updater.publisher(for: \.canCheckForUpdates)
-            .assign(to: &$canCheckForUpdates)
-        updater.publisher(for: \.lastUpdateCheckDate)
-            .assign(to: &$lastUpdateCheckDate)
+        canCheckForUpdates = false
+        Logger.updates.info("Updates are disabled in this build")
     }
 
     /// Checks for app updates.
+    ///
+    /// Updates are disabled in this fork, so this method does nothing.
     @objc func checkForUpdates() {
-        #if DEBUG
-        // Checking for updates hangs in debug mode.
-        let alert = NSAlert()
-        alert.messageText = "Checking for updates is not supported in debug mode."
-        alert.runModal()
-        #else
-        guard let appState else {
-            return
-        }
-        // Activate the app in case an alert needs to be displayed.
-        appState.activate(withPolicy: .regular)
-        appState.openSettingsWindow()
-        updater.checkForUpdates()
-        #endif
+        Logger.updates.info("Ignoring update check: updates are disabled in this build")
     }
 }
 
@@ -127,8 +116,8 @@ extension UpdatesManager: @preconcurrency SPUStandardUserDriverDelegate {
         if !state.userInitiated {
             appState.userNotificationManager.addRequest(
                 with: .updateCheck,
-                title: "A new update is available",
-                body: "Version \(update.displayVersionString) is now available"
+                title: "Доступно обновление",
+                body: "Доступна версия \(update.displayVersionString)"
             )
         }
     }
@@ -143,3 +132,8 @@ extension UpdatesManager: @preconcurrency SPUStandardUserDriverDelegate {
 
 // MARK: UpdatesManager: BindingExposable
 extension UpdatesManager: BindingExposable { }
+
+// MARK: - Logger
+private extension Logger {
+    static let updates = Logger(category: "Updates")
+}
