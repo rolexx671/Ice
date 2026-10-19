@@ -5,6 +5,21 @@
 
 import SwiftUI
 
+/// Возвращает слово «секунда» в нужной форме для заданного числа.
+fileprivate func secondsWord(for value: Double) -> String {
+    guard value == value.rounded() else {
+        return "секунды"
+    }
+    let n = Int(value)
+    if n % 10 == 1 && n % 100 != 11 {
+        return "секунда"
+    }
+    if (2...4).contains(n % 10) && !(12...14).contains(n % 100) {
+        return "секунды"
+    }
+    return "секунд"
+}
+
 struct AdvancedSettingsPane: View {
     @EnvironmentObject var appState: AppState
     @State private var maxSliderLabelWidth: CGFloat = 0
@@ -19,11 +34,7 @@ struct AdvancedSettingsPane: View {
 
     private func formattedToSeconds(_ interval: TimeInterval) -> LocalizedStringKey {
         let formatted = interval.formatted()
-        return if interval == 1 {
-            LocalizedStringKey(formatted + " second")
-        } else {
-            LocalizedStringKey(formatted + " seconds")
-        }
+        return LocalizedStringKey(formatted + " " + secondsWord(for: interval))
     }
 
     var body: some View {
@@ -42,7 +53,7 @@ struct AdvancedSettingsPane: View {
                 showOnHoverDelaySlider
                 tempShowIntervalSlider
             }
-            IceSection("Permissions") {
+            IceSection("Разрешения") {
                 allPermissions
             }
         }
@@ -50,16 +61,16 @@ struct AdvancedSettingsPane: View {
 
     @ViewBuilder
     private var hideApplicationMenus: some View {
-        Toggle("Hide application menus when showing menu bar items", isOn: manager.bindings.hideApplicationMenus)
-            .annotation("Make more room in the menu bar by hiding the left application menus if needed")
+        Toggle("Скрывать меню приложений при показе объектов строки меню", isOn: manager.bindings.hideApplicationMenus)
+            .annotation("Освободите место в строке меню, скрыв при необходимости меню приложений слева")
     }
 
     @ViewBuilder
     private var showSectionDividers: some View {
-        Toggle("Show section dividers", isOn: manager.bindings.showSectionDividers)
+        Toggle("Показывать разделители секций", isOn: manager.bindings.showSectionDividers)
             .annotation {
                 HStack(spacing: 2) {
-                    Text("Insert divider items")
+                    Text("Вставлять объекты-разделители")
                     if let nsImage = ControlItemImage.builtin(.chevronLarge).nsImage(for: appState) {
                         HStack(spacing: 0) {
                             Text("(")
@@ -70,25 +81,25 @@ struct AdvancedSettingsPane: View {
                                 .font(.body.monospaced().bold())
                         }
                     }
-                    Text("between sections")
+                    Text("между секциями")
                 }
             }
     }
 
     @ViewBuilder
     private var enableAlwaysHiddenSection: some View {
-        Toggle("Enable always-hidden section", isOn: manager.bindings.enableAlwaysHiddenSection)
+        Toggle("Включить всегда скрытую секцию", isOn: manager.bindings.enableAlwaysHiddenSection)
     }
 
     @ViewBuilder
     private var canToggleAlwaysHiddenSection: some View {
         if manager.enableAlwaysHiddenSection {
-            Toggle("Always-hidden section can be shown", isOn: manager.bindings.canToggleAlwaysHiddenSection)
+            Toggle("Разрешить показ всегда скрытой секции", isOn: manager.bindings.canToggleAlwaysHiddenSection)
                 .annotation {
                     if appState.settingsManager.generalSettingsManager.showOnClick {
-                        Text("Option + click one of Ice's menu bar items, or inside an empty area of the menu bar to show the section")
+                        Text("Нажмите Option и кликните по одному из объектов Ice в строке меню или на пустом месте в строке меню, чтобы показать секцию")
                     } else {
-                        Text("Option + click one of Ice's menu bar items to show the section")
+                        Text("Нажмите Option и кликните по одному из объектов Ice в строке меню, чтобы показать секцию")
                     }
                 }
         }
@@ -104,14 +115,14 @@ struct AdvancedSettingsPane: View {
                 step: 0.1
             )
         } label: {
-            Text("Show on hover delay")
+            Text("Задержка показа при наведении")
                 .frame(minHeight: .compactSliderMinHeight)
                 .frame(minWidth: maxSliderLabelWidth, alignment: .leading)
                 .onFrameChange { frame in
                     maxSliderLabelWidth = max(maxSliderLabelWidth, frame.width)
                 }
         }
-        .annotation("The amount of time to wait before showing on hover")
+        .annotation("Время ожидания перед показом при наведении")
     }
 
     @ViewBuilder
@@ -124,24 +135,24 @@ struct AdvancedSettingsPane: View {
                 step: 1
             )
         } label: {
-            Text("Temporarily shown item delay")
+            Text("Задержка временно показанного объекта")
                 .frame(minHeight: .compactSliderMinHeight)
                 .frame(minWidth: maxSliderLabelWidth, alignment: .leading)
                 .onFrameChange { frame in
                     maxSliderLabelWidth = max(maxSliderLabelWidth, frame.width)
                 }
         }
-        .annotation("The amount of time to wait before hiding temporarily shown menu bar items")
+        .annotation("Время ожидания перед скрытием временно показанных объектов строки меню")
     }
 
     @ViewBuilder
     private var showAllSectionsOnUserDrag: some View {
-        Toggle("Show all sections when Command + dragging menu bar items", isOn: manager.bindings.showAllSectionsOnUserDrag)
+        Toggle("Показывать все секции при перетаскивании объектов строки меню с нажатой клавишей Command", isOn: manager.bindings.showAllSectionsOnUserDrag)
     }
 
     @ViewBuilder
     private var showContextMenuOnRightClick: some View {
-        Toggle("Show context menu on right click", isOn: manager.bindings.showContextMenuOnRightClick)
+        Toggle("Показывать контекстное меню по правому клику", isOn: manager.bindings.showContextMenuOnRightClick)
     }
 
     @ViewBuilder
@@ -150,13 +161,13 @@ struct AdvancedSettingsPane: View {
             IceLabeledContent {
                 if permission.hasPermission {
                     Label {
-                        Text("Permission Granted")
+                        Text("Разрешение выдано")
                     } icon: {
                         Image(systemName: "checkmark.circle")
                             .foregroundStyle(.green)
                     }
                 } else {
-                    Button("Grant Permission") {
+                    Button("Выдать разрешение") {
                         permission.performRequest()
                     }
                 }

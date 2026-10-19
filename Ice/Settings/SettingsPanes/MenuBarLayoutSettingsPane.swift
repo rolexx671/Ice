@@ -23,7 +23,7 @@ struct MenuBarLayoutSettingsPane: View {
 
     @ViewBuilder
     private var header: some View {
-        Text("Drag to arrange your menu bar items")
+        Text("Перетащите объекты строки меню, чтобы расставить их")
             .font(.title2)
 
         IceGroupBox {
@@ -32,7 +32,7 @@ struct MenuBarLayoutSettingsPane: View {
                 font: .callout.bold()
             ) {
                 Label {
-                    Text("Tip: you can also arrange menu bar items by Command + dragging them in the menu bar")
+                    Text("Совет: объекты строки меню можно также расставлять, перетаскивая их в строке меню с нажатой клавишей Command")
                 } icon: {
                     Image(systemName: "lightbulb")
                 }
@@ -51,7 +51,7 @@ struct MenuBarLayoutSettingsPane: View {
 
     @ViewBuilder
     private var cannotArrange: some View {
-        Text("Ice cannot arrange menu bar items in automatically hidden menu bars")
+        Text("Ice не может расставлять объекты в автоматически скрываемой строке меню")
             .font(.title3)
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
     }
@@ -59,13 +59,13 @@ struct MenuBarLayoutSettingsPane: View {
     @ViewBuilder
     private var missingScreenRecordingPermission: some View {
         VStack {
-            Text("Menu bar layout requires screen recording permissions")
+            Text("Для расположения объектов строки меню требуется разрешение на запись экрана")
                 .font(.title2)
 
             Button {
                 appState.navigationState.settingsNavigationIdentifier = .advanced
             } label: {
-                Text("Go to Advanced Settings")
+                Text("Перейти в дополнительные настройки")
             }
             .buttonStyle(.link)
         }
@@ -78,7 +78,7 @@ struct MenuBarLayoutSettingsPane: View {
             section.isEnabled
         {
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(section.name.displayString) Section")
+                Text("\(section.name.displayString) секция")
                     .font(.system(size: 14))
                     .padding(.leading, 2)
 

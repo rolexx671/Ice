@@ -11,9 +11,9 @@ struct PermissionsView: View {
 
     private var continueButtonText: LocalizedStringKey {
         if case .hasRequiredPermissions = permissionsManager.permissionsState {
-            "Continue in Limited Mode"
+            "Продолжить в ограниченном режиме"
         } else {
-            "Continue"
+            "Продолжить"
         }
     }
 
@@ -58,7 +58,7 @@ struct PermissionsView: View {
     @ViewBuilder
     private var headerView: some View {
         Label {
-            Text("Permissions")
+            Text("Разрешения")
                 .font(.system(size: 36))
         } icon: {
             if let nsImage = NSImage(named: NSImage.applicationIconName) {
@@ -74,8 +74,8 @@ struct PermissionsView: View {
     private var explanationView: some View {
         IceSection {
             VStack {
-                Text("Ice needs permission to manage the menu bar.")
-                Text("Absolutely no personal information is collected or stored.")
+                Text("Ice нужно разрешение для управления строкой меню.")
+                Text("Личные данные не собираются и не сохраняются.")
                     .bold()
                     .foregroundStyle(.red)
             }
@@ -108,7 +108,7 @@ struct PermissionsView: View {
         Button {
             NSApp.terminate(nil)
         } label: {
-            Text("Quit")
+            Text("Завершить")
                 .frame(maxWidth: .infinity)
         }
     }
@@ -139,7 +139,7 @@ struct PermissionsView: View {
                     .underline()
 
                 VStack(spacing: 0) {
-                    Text("Ice needs this to:")
+                    Text("Ice нужно это, чтобы:")
                         .font(.title3)
                         .bold()
 
@@ -165,10 +165,10 @@ struct PermissionsView: View {
                     }
                 } label: {
                     if permission.hasPermission {
-                        Text("Permission Granted")
+                        Text("Разрешение выдано")
                             .foregroundStyle(.green)
                     } else {
-                        Text("Grant Permission")
+                        Text("Выдать разрешение")
                     }
                 }
                 .allowsHitTesting(!permission.hasPermission)
@@ -180,7 +180,7 @@ struct PermissionsView: View {
                             font: .callout.bold()
                         ) {
                             Label {
-                                Text("Ice can work in a limited mode without this permission.")
+                                Text("Без этого разрешения Ice может работать в ограниченном режиме.")
                             } icon: {
                                 Image(systemName: "checkmark.shield")
                                     .foregroundStyle(.green)

@@ -118,10 +118,10 @@ class Permission: ObservableObject, Identifiable {
 final class AccessibilityPermission: Permission {
     init() {
         super.init(
-            title: "Accessibility",
+            title: "Универсальный доступ",
             details: [
-                "Get real-time information about the menu bar.",
-                "Arrange menu bar items.",
+                "Получать информацию о строке меню в реальном времени.",
+                "Расставлять объекты строки меню.",
             ],
             isRequired: true,
             settingsURL: nil,
@@ -140,10 +140,10 @@ final class AccessibilityPermission: Permission {
 final class ScreenRecordingPermission: Permission {
     init() {
         super.init(
-            title: "Screen Recording",
+            title: "Запись экрана",
             details: [
-                "Edit the menu bar's appearance.",
-                "Display images of individual menu bar items.",
+                "Менять внешний вид строки меню.",
+                "Показывать изображения отдельных объектов строки меню.",
             ],
             isRequired: false,
             settingsURL: URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_ScreenCapture"),

@@ -14,14 +14,14 @@ struct HotkeysSettingsPane: View {
 
     var body: some View {
         IceForm {
-            IceSection("Menu Bar Sections") {
+            IceSection("Секции строки меню") {
                 hotkeyRecorder(forSection: .hidden)
                 hotkeyRecorder(forSection: .alwaysHidden)
             }
-            IceSection("Menu Bar Items") {
+            IceSection("Объекты строки меню") {
                 hotkeyRecorder(forAction: .searchMenuBarItems)
             }
-            IceSection("Other") {
+            IceSection("Другое") {
                 hotkeyRecorder(forAction: .enableIceBar)
                 hotkeyRecorder(forAction: .showSectionDividers)
                 hotkeyRecorder(forAction: .toggleApplicationMenus)
@@ -35,17 +35,17 @@ struct HotkeysSettingsPane: View {
             HotkeyRecorder(hotkey: hotkey) {
                 switch action {
                 case .toggleHiddenSection:
-                    Text("Toggle the hidden section")
+                    Text("Показать или скрыть скрытую секцию")
                 case .toggleAlwaysHiddenSection:
-                    Text("Toggle the always-hidden section")
+                    Text("Показать или скрыть всегда скрытую секцию")
                 case .searchMenuBarItems:
-                    Text("Search menu bar items")
+                    Text("Поиск объектов строки меню")
                 case .enableIceBar:
-                    Text("Enable the Ice Bar")
+                    Text("Включить Ice Bar")
                 case .showSectionDividers:
-                    Text("Show section dividers")
+                    Text("Показывать разделители секций")
                 case .toggleApplicationMenus:
-                    Text("Toggle application menus")
+                    Text("Показать или скрыть меню приложений")
                 }
             }
         }

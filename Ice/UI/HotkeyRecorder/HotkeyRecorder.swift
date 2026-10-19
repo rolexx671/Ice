@@ -32,10 +32,10 @@ struct HotkeyRecorder<Label: View>: View {
                 }
         }
         .alert(
-            "Hotkey is reserved by macOS",
+            "Это сочетание клавиш зарезервировано macOS",
             isPresented: $model.isPresentingReservedByMacOSError
         ) {
-            Button("OK") {
+            Button("ОК") {
                 model.isPresentingReservedByMacOSError = false
             }
         }
@@ -81,7 +81,7 @@ struct HotkeyRecorder<Label: View>: View {
     @ViewBuilder
     private var leadingSegmentLabel: some View {
         if model.isRecording {
-            Text("Type Hotkey")
+            Text("Введите сочетание")
         } else if model.hotkey.isEnabled {
             if let keyCombination = model.hotkey.keyCombination {
                 HStack(spacing: 0) {
@@ -89,10 +89,10 @@ struct HotkeyRecorder<Label: View>: View {
                     Text(keyCombination.key.stringValue.capitalized)
                 }
             } else {
-                Text("ERROR")
+                Text("ОШИБКА")
             }
         } else {
-            Text("Record Hotkey")
+            Text("Записать сочетание")
         }
     }
 

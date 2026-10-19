@@ -6,6 +6,21 @@
 import LaunchAtLogin
 import SwiftUI
 
+/// Возвращает слово «секунда» в нужной форме для заданного числа.
+fileprivate func secondsWord(for value: Double) -> String {
+    guard value == value.rounded() else {
+        return "секунды"
+    }
+    let n = Int(value)
+    if n % 10 == 1 && n % 100 != 11 {
+        return "секунда"
+    }
+    if (2...4).contains(n % 10) && !(12...14).contains(n % 100) {
+        return "секунды"
+    }
+    return "секунд"
+}
+
 struct GeneralSettingsPane: View {
     @EnvironmentObject var appState: AppState
     @State private var isImportingCustomIceIcon = false
@@ -25,11 +40,11 @@ struct GeneralSettingsPane: View {
     private func localizedOffsetString(for offset: CGFloat) -> LocalizedStringKey {
         switch offset {
         case -16:
-            return LocalizedStringKey("none")
+            return LocalizedStringKey("нет")
         case 0:
-            return LocalizedStringKey("default")
+            return LocalizedStringKey("по умолчанию")
         case 16:
-            return LocalizedStringKey("max")
+            return LocalizedStringKey("макс.")
         default:
             return LocalizedStringKey(offset.formatted())
         }
@@ -37,11 +52,7 @@ struct GeneralSettingsPane: View {
 
     private var rehideIntervalKey: LocalizedStringKey {
         let formatted = manager.rehideInterval.formatted()
-        if manager.rehideInterval == 1 {
-            return LocalizedStringKey(formatted + " second")
-        } else {
-            return LocalizedStringKey(formatted + " seconds")
-        }
+        return LocalizedStringKey(formatted + " " + secondsWord(for: manager.rehideInterval))
     }
 
     private var hasSpacingSliderValueChanged: Bool {
@@ -76,7 +87,7 @@ struct GeneralSettingsPane: View {
             }
         }
         .alert(isPresented: $isPresentingError, error: presentedError) {
-            Button("OK") {
+            Button("ОК") {
                 presentedError = nil
                 isPresentingError = false
             }
@@ -91,7 +102,7 @@ struct GeneralSettingsPane: View {
     @ViewBuilder
     private func menuItem(for imageSet: ControlItemImageSet) -> some View {
         Label {
-            Text(imageSet.name.rawValue)
+            Text(imageSet.name.displayName)
         } icon: {
             if let nsImage = imageSet.hidden.nsImage(for: appState) {
                 switch imageSet.name {
@@ -111,15 +122,15 @@ struct GeneralSettingsPane: View {
 
     @ViewBuilder
     private var iceIconOptions: some View {
-        Toggle("Show Ice icon", isOn: manager.bindings.showIceIcon)
+        Toggle("Показывать значок Ice", isOn: manager.bindings.showIceIcon)
             .annotation {
                 if !manager.showIceIcon {
-                    Text("You can still access Ice's settings by right-clicking an empty area in the menu bar")
+                    Text("Настройки Ice по-прежнему доступны по правому клику на пустом месте в строке меню")
                 }
             }
         if manager.showIceIcon {
-            IceMenu("Ice icon") {
-                Picker("Ice icon", selection: manager.bindings.iceIcon) {
+            IceMenu("Значок Ice") {
+                Picker("Значок Ice", selection: manager.bindings.iceIcon) {
                     ForEach(ControlItemImageSet.userSelectableIceIcons) { imageSet in
                         Button {
                             manager.iceIcon = imageSet
@@ -142,13 +153,13 @@ struct GeneralSettingsPane: View {
 
                 Divider()
 
-                Button("Choose image…") {
+                Button("Выбрать изображение…") {
                     isImportingCustomIceIcon = true
                 }
             } title: {
                 menuItem(for: manager.iceIcon)
             }
-            .annotation("Choose a custom icon to show in the menu bar")
+            .annotation("Выберите свой значок для отображения в строке меню")
             .fileImporter(
                 isPresented: $isImportingCustomIceIcon,
                 allowedContentTypes: [.image]
@@ -167,8 +178,8 @@ struct GeneralSettingsPane: View {
             }
 
             if case .custom = manager.iceIcon.name {
-                Toggle("Apply system theme to icon", isOn: manager.bindings.customIceIconIsTemplate)
-                    .annotation("Display the icon as a monochrome image matching the system appearance")
+                Toggle("Применять системную тему к значку", isOn: manager.bindings.customIceIconIsTemplate)
+                    .annotation("Показывать значок монохромным изображением в соответствии с оформлением системы")
             }
         }
     }
@@ -183,13 +194,13 @@ struct GeneralSettingsPane: View {
 
     @ViewBuilder
     private var useIceBar: some View {
-        Toggle("Use Ice Bar", isOn: manager.bindings.useIceBar)
-            .annotation("Show hidden menu bar items in a separate bar below the menu bar")
+        Toggle("Использовать Ice Bar", isOn: manager.bindings.useIceBar)
+            .annotation("Показывать скрытые объекты строки меню в отдельной панели под строкой меню")
     }
 
     @ViewBuilder
     private var iceBarLocationPicker: some View {
-        IcePicker("Location", selection: manager.bindings.iceBarLocation) {
+        IcePicker("Расположение", selection: manager.bindings.iceBarLocation) {
             ForEach(IceBarLocation.allCases) { location in
                 Text(location.localized).tag(location)
             }
@@ -197,31 +208,31 @@ struct GeneralSettingsPane: View {
         .annotation {
             switch manager.iceBarLocation {
             case .dynamic:
-                Text("The Ice Bar's location changes based on context")
+                Text("Расположение Ice Bar зависит от контекста")
             case .mousePointer:
-                Text("The Ice Bar is centered below the mouse pointer")
+                Text("Ice Bar располагается по центру под указателем мыши")
             case .iceIcon:
-                Text("The Ice Bar is centered below the Ice icon")
+                Text("Ice Bar располагается по центру под значком Ice")
             }
         }
     }
 
     @ViewBuilder
     private var showOnClick: some View {
-        Toggle("Show on click", isOn: manager.bindings.showOnClick)
-            .annotation("Click inside an empty area of the menu bar to show hidden menu bar items")
+        Toggle("Показывать по клику", isOn: manager.bindings.showOnClick)
+            .annotation("Кликните на пустом месте в строке меню, чтобы показать скрытые объекты строки меню")
     }
 
     @ViewBuilder
     private var showOnHover: some View {
-        Toggle("Show on hover", isOn: manager.bindings.showOnHover)
-            .annotation("Hover over an empty area of the menu bar to show hidden menu bar items")
+        Toggle("Показывать при наведении", isOn: manager.bindings.showOnHover)
+            .annotation("Наведите указатель на пустое место в строке меню, чтобы показать скрытые объекты строки меню")
     }
 
     @ViewBuilder
     private var showOnScroll: some View {
-        Toggle("Show on scroll", isOn: manager.bindings.showOnScroll)
-            .annotation("Scroll or swipe in the menu bar to toggle hidden menu bar items")
+        Toggle("Показывать при прокрутке", isOn: manager.bindings.showOnScroll)
+            .annotation("Прокрутите или проведите пальцами по строке меню, чтобы показать или скрыть объекты строки меню")
     }
 
     @ViewBuilder
@@ -236,10 +247,10 @@ struct GeneralSettingsPane: View {
             .disabled(isApplyingOffset)
         } label: {
             IceLabeledContent {
-                Button("Apply") {
+                Button("Применить") {
                     applyOffset()
                 }
-                .help("Apply the current spacing")
+                .help("Применить текущий интервал")
                 .disabled(isApplyingOffset || !hasSpacingSliderValueChanged)
 
                 if isApplyingOffset {
@@ -254,24 +265,24 @@ struct GeneralSettingsPane: View {
                         Image(systemName: "arrow.counterclockwise.circle.fill")
                     }
                     .buttonStyle(.borderless)
-                    .help("Reset to the default spacing")
+                    .help("Вернуть интервал по умолчанию")
                     .disabled(isApplyingOffset || !isActualOffsetDifferentFromDefault)
                 }
             } label: {
                 HStack {
-                    Text("Menu bar item spacing")
+                    Text("Интервал между объектами строки меню")
                     BetaBadge()
                 }
             }
         }
         .annotation(
-            "Applying this setting will relaunch all apps with menu bar items. Some apps may need to be manually relaunched.",
+            "При применении этой настройки все приложения с объектами строки меню будут перезапущены. Некоторые приложения, возможно, придётся перезапустить вручную.",
             spacing: 2
         )
         .annotation(spacing: 10, font: .callout.bold()) {
             IceGroupBox {
                 Label {
-                    Text("Note: You may need to log out and back in for this setting to apply properly.")
+                    Text("Примечание: чтобы настройка применилась корректно, может потребоваться выйти из системы и войти снова.")
                 } icon: {
                     Image(systemName: "exclamationmark.circle")
                 }
@@ -285,7 +296,7 @@ struct GeneralSettingsPane: View {
 
     @ViewBuilder
     private var rehideStrategyPicker: some View {
-        IcePicker("Strategy", selection: manager.bindings.rehideStrategy) {
+        IcePicker("Способ", selection: manager.bindings.rehideStrategy) {
             ForEach(RehideStrategy.allCases) { strategy in
                 Text(strategy.localized).tag(strategy)
             }
@@ -293,18 +304,18 @@ struct GeneralSettingsPane: View {
         .annotation {
             switch manager.rehideStrategy {
             case .smart:
-                Text("Menu bar items are rehidden using a smart algorithm")
+                Text("Объекты строки меню скрываются повторно по умному алгоритму")
             case .timed:
-                Text("Menu bar items are rehidden after a fixed amount of time")
+                Text("Объекты строки меню скрываются повторно через заданное время")
             case .focusedApp:
-                Text("Menu bar items are rehidden when the focused app changes")
+                Text("Объекты строки меню скрываются повторно при смене активного приложения")
             }
         }
     }
 
     @ViewBuilder
     private var autoRehideOptions: some View {
-        Toggle("Automatically rehide", isOn: manager.bindings.autoRehide)
+        Toggle("Скрывать повторно автоматически", isOn: manager.bindings.autoRehide)
         if manager.autoRehide {
             if case .timed = manager.rehideStrategy {
                 VStack {
