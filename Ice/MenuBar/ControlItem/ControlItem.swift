@@ -66,7 +66,9 @@ final class ControlItem {
         guard let window else {
             return nil
         }
-        return CGWindowID(window.windowNumber)
+        // On newer macOS versions, status bar windows can report a window
+        // number that doesn't fit in a CGWindowID. Return nil instead of trapping.
+        return CGWindowID(exactly: window.windowNumber)
     }
 
     /// A Boolean value that indicates whether the control item serves as
