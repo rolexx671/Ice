@@ -31,6 +31,7 @@ xcodebuild \
     DEVELOPMENT_TEAM= \
     CODE_SIGN_STYLE=Manual \
     ENABLE_HARDENED_RUNTIME=NO \
+    CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO \
     build
 
 [[ -d "$APP" ]] || die "после сборки не найден $APP"
@@ -45,6 +46,9 @@ fi
 echo "==> Ad-hoc подпись…"
 codesign --force --deep --sign - --preserve-metadata=entitlements "$APP"
 codesign --verify --deep --strict --verbose=2 "$APP"
+if codesign -d --entitlements - "$APP" 2>/dev/null | grep -q "get-task-allow"; then
+    die "в подписи $APP есть get-task-allow — Release-сборка не должна его содержать"
+fi
 
 DMG="$DIST_DIR/Ice-$VERSION-ru.dmg"
 STAGING="$(mktemp -d "${TMPDIR:-/tmp}/ice-dmg.XXXXXX")"

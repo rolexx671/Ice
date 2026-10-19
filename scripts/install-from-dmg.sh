@@ -11,6 +11,8 @@ DMG="$1"
 [[ -f "$DMG" ]] || die "файл не найден: $DMG"
 
 DEST="/Applications/Ice.app"
+STAGED="/Applications/.Ice.app.new"
+BACKUP="/Applications/.Ice.app.old"
 MOUNT_POINT="$(mktemp -d "${TMPDIR:-/tmp}/ice-mount.XXXXXX")"
 MOUNTED=0
 
@@ -45,9 +47,24 @@ if pgrep -x Ice >/dev/null; then
     fi
 fi
 
-echo "==> Копирование в $DEST…"
-rm -rf "$DEST"
-ditto "$SRC" "$DEST"
+# Сначала копируем во временный путь рядом с целевым: если копирование
+# прервётся, старое приложение останется на месте.
+echo "==> Копирование во временный $STAGED…"
+rm -rf "$STAGED"
+ditto "$SRC" "$STAGED" || { rm -rf "$STAGED"; die "не удалось скопировать Ice.app в $STAGED"; }
+[[ -d "$STAGED/Contents/MacOS" ]] || { rm -rf "$STAGED"; die "копия $STAGED неполная"; }
+
+echo "==> Замена $DEST…"
+if [[ -e "$DEST" ]]; then
+    rm -rf "$BACKUP"
+    mv "$DEST" "$BACKUP" || { rm -rf "$STAGED"; die "не удалось убрать старый $DEST"; }
+fi
+if ! mv "$STAGED" "$DEST"; then
+    [[ -e "$BACKUP" ]] && mv "$BACKUP" "$DEST"
+    rm -rf "$STAGED"
+    die "не удалось переместить новое приложение в $DEST"
+fi
+rm -rf "$BACKUP"
 
 echo "==> Отмонтирование образа…"
 hdiutil detach "$MOUNT_POINT" -quiet

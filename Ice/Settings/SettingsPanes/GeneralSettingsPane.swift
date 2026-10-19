@@ -96,7 +96,7 @@ struct GeneralSettingsPane: View {
 
     @ViewBuilder
     private var launchAtLogin: some View {
-        LaunchAtLogin.Toggle()
+        LaunchAtLogin.Toggle("Открывать при входе")
     }
 
     @ViewBuilder
@@ -125,7 +125,7 @@ struct GeneralSettingsPane: View {
         Toggle("Показывать значок Ice", isOn: manager.bindings.showIceIcon)
             .annotation {
                 if !manager.showIceIcon {
-                    Text("Настройки Ice по-прежнему доступны по правому клику на пустом месте в строке меню")
+                    Text("Настройки Ice по-прежнему доступны по нажатию правой кнопкой на пустом месте в строке меню")
                 }
             }
         if manager.showIceIcon {
@@ -219,8 +219,8 @@ struct GeneralSettingsPane: View {
 
     @ViewBuilder
     private var showOnClick: some View {
-        Toggle("Показывать по клику", isOn: manager.bindings.showOnClick)
-            .annotation("Кликните на пустом месте в строке меню, чтобы показать скрытые объекты строки меню")
+        Toggle("Показывать по нажатию", isOn: manager.bindings.showOnClick)
+            .annotation("Нажмите на пустое место в строке меню, чтобы показать скрытые объекты строки меню")
     }
 
     @ViewBuilder
@@ -296,7 +296,7 @@ struct GeneralSettingsPane: View {
 
     @ViewBuilder
     private var rehideStrategyPicker: some View {
-        IcePicker("Способ", selection: manager.bindings.rehideStrategy) {
+        IcePicker("Повторное скрытие", selection: manager.bindings.rehideStrategy) {
             ForEach(RehideStrategy.allCases) { strategy in
                 Text(strategy.localized).tag(strategy)
             }

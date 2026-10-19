@@ -97,9 +97,9 @@ struct AdvancedSettingsPane: View {
             Toggle("Разрешить показ всегда скрытой секции", isOn: manager.bindings.canToggleAlwaysHiddenSection)
                 .annotation {
                     if appState.settingsManager.generalSettingsManager.showOnClick {
-                        Text("Нажмите Option и кликните по одному из объектов Ice в строке меню или на пустом месте в строке меню, чтобы показать секцию")
+                        Text("Нажмите, удерживая клавишу Option, на один из объектов Ice в строке меню или на пустое место в строке меню, чтобы показать секцию")
                     } else {
-                        Text("Нажмите Option и кликните по одному из объектов Ice в строке меню, чтобы показать секцию")
+                        Text("Нажмите, удерживая клавишу Option, на один из объектов Ice в строке меню, чтобы показать секцию")
                     }
                 }
         }
@@ -135,7 +135,7 @@ struct AdvancedSettingsPane: View {
                 step: 1
             )
         } label: {
-            Text("Задержка временно показанного объекта")
+            Text("Задержка скрытия временно показанных объектов")
                 .frame(minHeight: .compactSliderMinHeight)
                 .frame(minWidth: maxSliderLabelWidth, alignment: .leading)
                 .onFrameChange { frame in
@@ -152,7 +152,7 @@ struct AdvancedSettingsPane: View {
 
     @ViewBuilder
     private var showContextMenuOnRightClick: some View {
-        Toggle("Показывать контекстное меню по правому клику", isOn: manager.bindings.showContextMenuOnRightClick)
+        Toggle("Показывать контекстное меню по нажатию правой кнопкой", isOn: manager.bindings.showContextMenuOnRightClick)
     }
 
     @ViewBuilder

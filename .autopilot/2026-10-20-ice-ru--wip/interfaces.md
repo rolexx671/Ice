@@ -22,6 +22,8 @@
 | Settings… / Ice Settings… | Настройки… / Настройки Ice… |
 | General · Menu Bar Layout · Menu Bar Appearance · Hotkeys · Advanced · About | Основные · Расположение · Внешний вид · Сочетания клавиш · Дополнительно · О программе |
 | Hotkey | сочетание клавиш |
+| Click / Option-click / Right-click | нажать / нажать, удерживая клавишу Option / нажать правой кнопкой («по нажатию», не «клик»/«щелчок») |
+| Tip: | Совет: |
 | Quit Ice | Завершить Ice |
 | Search | Поиск |
 | Rehide / Rehide strategy | повторное скрытие / способ повторного скрытия |
@@ -74,8 +76,13 @@ n%10 in 2...4 && n%100 not in 12...14 → «секунды»; иначе «се�
 - **Проверка синтаксиса одного файла** (волна 1, пока соседи правят другие файлы):
   `xcrun swiftc -parse <файл.swift>` — должна пройти без ошибок для каждого изменённого файла.
 - **Полная проверка** (с волны 2): ad-hoc сборка Release
-  `xcodebuild -project Ice.xcodeproj -scheme Ice -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY=- "CODE_SIGN_IDENTITY[sdk=macosx*]=-" DEVELOPMENT_TEAM= CODE_SIGN_STYLE=Manual ENABLE_HARDENED_RUNTIME=NO build`
+  `xcodebuild -project Ice.xcodeproj -scheme Ice -configuration Release -derivedDataPath build CODE_SIGN_IDENTITY=- DEVELOPMENT_TEAM= CODE_SIGN_STYLE=Manual ENABLE_HARDENED_RUNTIME=NO CODE_SIGN_INJECT_BASE_ENTITLEMENTS=NO build`
   → `build/Build/Products/Release/Ice.app`. Тестов в проекте нет.
 - В волне 1 полную сборку НЕ запускать: параллельные таски правят соседние файлы, и общий `build/` сломается.
 - Поиск оставшегося английского: `grep -rnE '(Text|Button|Toggle|Label|Section|Picker|help|title:|messageText|informativeText)\(?\s*"[A-Za-z]' Ice/`
   — остаться могут только ключи/логи из списка «Не переводить» в `notes.md`.
+
+## Выставлено тасками
+- T01: `SettingsNavigationIdentifier.localized` — своя реализация; `fileprivate secondsWord(for: Double)` в General/AdvancedSettingsPane; GeneralSettingsPane использует `imageSet.name.displayName`.
+- T03: `MenuBarSection.Name.displayString: String`; `ControlItemImageSet.Name.displayName: String`; `UpdatesManager.performSetup()/checkForUpdates()` — заглушки с логом «Updates are disabled in this build», `canCheckForUpdates` всегда false.
+- T04: `scripts/build-dmg.sh` → `dist/Ice-<версия>-ru.dmg`; `scripts/install-from-dmg.sh <dmg>`; CompactSlider — локальный пакет `Packages/CompactSlider`.

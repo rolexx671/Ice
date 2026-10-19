@@ -404,8 +404,8 @@ private struct IceBarItemView: View {
                     IceBarItemClickView(item: item, leftClickAction: leftClickAction, rightClickAction: rightClickAction)
                 }
                 .accessibilityLabel(item.displayName)
-                .accessibilityAction(named: "Щелчок левой кнопкой", leftClickAction)
-                .accessibilityAction(named: "Щелчок правой кнопкой", rightClickAction)
+                .accessibilityAction(named: "Нажатие левой кнопкой", leftClickAction)
+                .accessibilityAction(named: "Нажатие правой кнопкой", rightClickAction)
         }
     }
 }

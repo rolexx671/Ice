@@ -499,7 +499,6 @@ final class ControlItem {
             menu.addItem(item)
         }
 
-
         menu.addItem(.separator())
 
         let quitItem = NSMenuItem(

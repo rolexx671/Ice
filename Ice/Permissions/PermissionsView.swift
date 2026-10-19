@@ -139,7 +139,7 @@ struct PermissionsView: View {
                     .underline()
 
                 VStack(spacing: 0) {
-                    Text("Ice нужно это, чтобы:")
+                    Text("Это разрешение нужно Ice, чтобы:")
                         .font(.title3)
                         .bold()
 
