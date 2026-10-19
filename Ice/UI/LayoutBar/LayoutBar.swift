@@ -54,7 +54,7 @@ struct LayoutBar: View {
     @ViewBuilder
     private var conditionalBody: some View {
         if imageCache.cacheFailed(for: section.name) {
-            Text("Unable to display menu bar items")
+            Text("Не удалось показать объекты строки меню")
                 .foregroundStyle(menuBarManager.averageColorInfo?.color.brightness ?? 0 > 0.67 ? .black : .white)
         } else {
             Representable(appState: appState, section: section, spacing: spacing)

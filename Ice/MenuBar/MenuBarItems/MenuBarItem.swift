@@ -68,7 +68,7 @@ struct MenuBarItem {
     /// A name associated with the item that is suited for display to
     /// the user.
     var displayName: String {
-        var fallback: String { "Unknown" }
+        var fallback: String { "Неизвестно" }
         guard let owningApplication else {
             return ownerName ?? title ?? fallback
         }
@@ -85,15 +85,15 @@ struct MenuBarItem {
         return switch MenuBarItemInfo.Namespace(owningApplication.bundleIdentifier) {
         case .controlCenter:
             switch title {
-            case "AccessibilityShortcuts": "Accessibility Shortcuts"
+            case "AccessibilityShortcuts": "Быстрые команды универсального доступа"
             case "BentoBox": bestName // Control Center
-            case "FocusModes": "Focus"
-            case "KeyboardBrightness": "Keyboard Brightness"
-            case "MusicRecognition": "Music Recognition"
-            case "NowPlaying": "Now Playing"
-            case "ScreenMirroring": "Screen Mirroring"
-            case "StageManager": "Stage Manager"
-            case "UserSwitcher": "Fast User Switching"
+            case "FocusModes": "Фокусирование"
+            case "KeyboardBrightness": "Яркость клавиатуры"
+            case "MusicRecognition": "Распознавание музыки"
+            case "NowPlaying": "Сейчас играет"
+            case "ScreenMirroring": "Повтор экрана"
+            case "StageManager": "Стейдж-менеджер"
+            case "UserSwitcher": "Быстрая смена пользователя"
             case "WiFi": "Wi-Fi"
             default: title
             }
@@ -102,7 +102,7 @@ struct MenuBarItem {
             case "TimeMachine.TMMenuExtraHost"/*Sonoma*/, "TimeMachineMenuExtra.TMMenuExtraHost"/*Sequoia*/: "Time Machine"
             default: title
             }
-        case MenuBarItemInfo.Namespace("com.apple.Passwords.MenuBarExtra"): "Passwords"
+        case MenuBarItemInfo.Namespace("com.apple.Passwords.MenuBarExtra"): "Пароли"
         default:
             bestName
         }

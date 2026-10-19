@@ -310,24 +310,24 @@ private struct IceBarContentView: View {
     private var content: some View {
         if !ScreenCapture.cachedCheckPermissions() {
             HStack {
-                Text("The Ice Bar requires screen recording permissions.")
+                Text("Для Ice Bar требуется разрешение на запись экрана.")
 
                 Button {
                     closePanel()
                     appState.navigationState.settingsNavigationIdentifier = .advanced
                     appState.appDelegate?.openSettingsWindow()
                 } label: {
-                    Text("Open Ice Settings")
+                    Text("Открыть настройки Ice")
                 }
                 .buttonStyle(.plain)
                 .foregroundStyle(.link)
             }
             .padding(.horizontal, 10)
         } else if menuBarManager.isMenuBarHiddenBySystemUserDefaults {
-            Text("Ice cannot display menu bar items for automatically hidden menu bars")
+            Text("Ice не может показывать объекты автоматически скрываемой строки меню")
                 .padding(.horizontal, 10)
         } else if imageCache.cacheFailed(for: section) {
-            Text("Unable to display menu bar items")
+            Text("Не удалось показать объекты строки меню")
                 .padding(.horizontal, 10)
         } else {
             ScrollView(.horizontal) {
@@ -404,8 +404,8 @@ private struct IceBarItemView: View {
                     IceBarItemClickView(item: item, leftClickAction: leftClickAction, rightClickAction: rightClickAction)
                 }
                 .accessibilityLabel(item.displayName)
-                .accessibilityAction(named: "left click", leftClickAction)
-                .accessibilityAction(named: "right click", rightClickAction)
+                .accessibilityAction(named: "Щелчок левой кнопкой", leftClickAction)
+                .accessibilityAction(named: "Щелчок правой кнопкой", rightClickAction)
         }
     }
 }

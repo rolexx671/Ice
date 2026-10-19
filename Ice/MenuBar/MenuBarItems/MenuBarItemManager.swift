@@ -434,25 +434,25 @@ extension MenuBarItemManager {
         var message: String {
             switch code {
             case .couldNotComplete:
-                "Could not complete event operation for \"\(item.displayName)\""
+                "Не удалось выполнить операцию с событием для «\(item.displayName)»"
             case .eventCreationFailure:
-                "Failed to create event for \"\(item.displayName)\""
+                "Не удалось создать событие для «\(item.displayName)»"
             case .invalidAppState:
-                "Invalid app state for \"\(item.displayName)\""
+                "Недопустимое состояние приложения для «\(item.displayName)»"
             case .invalidEventSource:
-                "Invalid event source for \"\(item.displayName)\""
+                "Недопустимый источник событий для «\(item.displayName)»"
             case .invalidCursorLocation:
-                "Invalid cursor location for \"\(item.displayName)\""
+                "Недопустимое положение курсора для «\(item.displayName)»"
             case .invalidItem:
-                "\"\(item.displayName)\" is invalid"
+                "Объект «\(item.displayName)» недействителен"
             case .notMovable:
-                "\"\(item.displayName)\" is not movable"
+                "Объект «\(item.displayName)» нельзя переместить"
             case .eventOperationTimeout:
-                "Event operation timed out for \"\(item.displayName)\""
+                "Время ожидания операции с событием истекло для «\(item.displayName)»"
             case .frameCheckTimeout:
-                "Frame check timed out for \"\(item.displayName)\""
+                "Время ожидания проверки положения истекло для «\(item.displayName)»"
             case .otherTimeout:
-                "Operation timed out for \"\(item.displayName)\""
+                "Время ожидания операции истекло для «\(item.displayName)»"
             }
         }
 
@@ -471,7 +471,7 @@ extension MenuBarItemManager {
 
         /// Suggestion for recovery from the error.
         var recoverySuggestion: String? {
-            "Please try again. If the error persists, please file a bug report."
+            "Повторите попытку. Если ошибка повторяется, сообщите о ней разработчикам."
         }
     }
 }
@@ -1350,7 +1350,7 @@ extension MenuBarItemManager {
 
         guard let targetItem = items.first else {
             let alert = NSAlert()
-            alert.messageText = "Not enough room to show \"\(item.displayName)\""
+            alert.messageText = "Недостаточно места, чтобы показать «\(item.displayName)»"
             alert.runModal()
             return
         }
